@@ -1,3 +1,24 @@
 h1 Hello world
 
-= @power_stats.first[1]
+/ = @dgc
+
+- (5..20).each do |n|
+	- date = Date.today-n
+	- daily_grid_consumption(date)
+	- daily_solar_generation(date)
+	- daily_grid_contribution(date)
+	- daily_solar_consumption(@daily_solar_generation, @daily_grid_contribution)
+	
+
+	p 
+		| Daily Grid Consumption
+		= @daily_grid_consumption
+	p 
+		| Daily Grid Contribution
+		= @daily_grid_contribution
+	p 
+		| Daily Solar Generation
+		= @daily_solar_generation
+	p
+		| Daily Solar Consumption 
+		= @daily_solar_consumption
