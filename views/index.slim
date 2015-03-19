@@ -1,24 +1,135 @@
-h1 Hello world
+h1 Ze Power
 
-/ = @dgc
+<div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
 
-- (5..20).each do |n|
+
+- (4..25).each do |n|
 	- date = Date.today-n
+	/ = date
+
+	- reference = date.to_s.gsub('-',"")
+	- date_recorder(date)
 	- daily_grid_consumption(date)
 	- daily_solar_generation(date)
 	- daily_grid_contribution(date)
 	- daily_solar_consumption(@daily_solar_generation, @daily_grid_contribution)
-	
 
-	p 
-		| Daily Grid Consumption
-		= @daily_grid_consumption
-	p 
-		| Daily Grid Contribution
-		= @daily_grid_contribution
-	p 
-		| Daily Solar Generation
-		= @daily_solar_generation
-	p
-		| Daily Solar Consumption 
-		= @daily_solar_consumption
+	
+	/ canvas id="#{reference}" width="600" height="400"
+
+	/ p 
+	/ 	| Daily Grid Consumption
+	/ 	= @daily_grid_consumption
+	/ p 
+	/ 	| Daily Grid Contribution
+	/ 	= @daily_grid_contribution
+	/ p 
+	/ 	| Total Solar Generation
+	/ 	= @daily_solar_generation
+	/ p
+	/ 	| Daily Solar Consumption 
+	/ 	= @daily_solar_consumption
+
+	/ javascript:
+	/ 	var data = [
+	/ 		{
+	/ 			value: #{@daily_grid_consumption},
+	/ 			color:"#F7464A",
+	/ 			highlight: "#F42F39",
+	/ 			label: "Daily Grid Consumption"
+	/ 		},
+	/ 		{
+	/ 			value: #{@daily_solar_consumption},
+	/ 			color: "#3FB34F",
+	/ 			highlight: "#18B226",
+	/ 			label: "Daily Solar Consumption"
+	/ 		},
+	/ 		{
+	/ 			value: #{@daily_grid_contribution},
+	/ 			color: "#F7EA48",
+	/ 			highlight: "#F7E714",
+	/ 			label: "Daily Solar Contribution"
+	/ 		}
+	/ 	];
+	/ 	var options = {
+	/ 		segmentShowStroke : false,
+	/ 		animateScale : true,
+	/ 		animateRotate: false, 
+	/ 		animation: false
+	/ 	}
+
+	/ 	var ctx = document.getElementById(#{reference}).getContext('2d');
+
+	/ 	new Chart(ctx).Doughnut(data,options);
+
+
+canvas id="lineChart" width="1490" height="800"
+
+p
+	= @period_date_values
+p 
+	= @period_grid_contribution_values
+p
+	= @period_grid_consumption_values
+p
+	= @period_solar_generation_values
+p
+	= @period_solar_consumption_values
+
+
+javascript:
+	var data = {
+		labels: #{{@period_date_values.reverse}},
+		datasets: [
+
+			{
+				label: "Grid Consumption",
+				fillColor: "rgba(151,187,205,0.2)",
+				strokeColor: "rgba(151,187,205,1)",
+				pointColor: "rgba(151,187,205,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(151,187,205,1)",
+				data: #{{@period_grid_consumption_values.reverse}}
+			},			{
+				label: "Grid Contribution",
+				fillColor: "rgba(220,220,220,0.2)",
+				strokeColor: "rgba(220,220,220,1)",
+				pointColor: "rgba(220,220,220,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(220,220,220,1)",
+				data: #{{@period_grid_contribution_values.reverse}}
+			},
+
+			{
+				label: "Solar Generation",
+				fillColor: "rgba(151,187,205,0.4)",
+				strokeColor: "rgba(151,187,205,0.4)",
+				pointColor: "rgba(151,187,205,0/4)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(151,187,205,0.4)",
+				data: #{{@period_solar_generation_values.reverse}}
+			},
+			{
+				label: "Solar Consumption",
+				fillColor: "rgba(151,187,205,0.2)",
+				strokeColor: "rgba(151,187,205,1)",
+				pointColor: "rgba(151,187,205,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(151,187,205,1)",
+				data: #{{@period_solar_consumption_values.reverse}}
+			}
+		]
+	};
+
+	var options = {
+		animateScale : true,
+		animateRotate: false 
+	}
+
+	var ctx = document.getElementById("lineChart").getContext('2d');
+	var myLineChart = new Chart(ctx).Line(data, options);
+
