@@ -1,2 +1,2 @@
-require './hello'
+require './solar'
 run Sinatra::Application
