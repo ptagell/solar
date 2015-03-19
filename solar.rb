@@ -80,6 +80,12 @@ get '/' do
 		@period_solar_consumption_values.push(@daily_solar_consumption.to_i)
 	end
 
+
+	def grid_savings_from_solar(a, b)
+		# total_cost_of_purchase
+
+		# total_feed_in_tariff_rebate = @period_grid_contribution_values
+	end
 # @period_grid_contribution_values
 # @period_solar_generation_values 
 # @period_solar_consumtion_values 
@@ -111,6 +117,6 @@ get '/' do
 	# @daily_contribution = daily_grid_contribution(Date.today-10)
 	# @dc = daily_calculations(Date.today)
 
- 	slim :index
+	slim :index
 
 end

@@ -1,9 +1,41 @@
-h1 Ze Power
+
+- startDate = 3 #days ago
+- finishDate = 125 # days ago
+
+
+h1 Realities of Solar
+
+p 	
+	| Period: 
+	=(Date.today-startDate).to_s+" - "
+	=(Date.today-startDate).to_s
+
+h2 During this period
+p
+	| Grid savings from solar  (including FIT):
+	- grid_savings_from_solar(@period_grid_consumption_values, @period_grid_contribution_values)
+	= @grid_savings_from_solar_value
+	
+p Time to pay back $5k System:
+p Economically viable cost for batteries:
+p 
+
+h2 Cost breakdown
+
+
+
+
+<div id="pie" style="min-width: 310px; max-width: 1400px; height: 500px; margin: 0 auto"></div>
+
+h2 Usage patterns
 
 <div id="container" style="min-width: 310px; max-width: 1400px; height: 500px; margin: 0 auto"></div>
 
+<div id="line" style="min-width: 310px; max-width: 1400px; height: 1500px; margin: 0 auto"></div>
 
-- (3..125).each do |n|
+
+
+- (startDate..finishDate).each do |n|
 	- date = Date.today-n
 	/ = date
 
@@ -14,67 +46,33 @@ h1 Ze Power
 	- daily_grid_contribution(date)
 	- daily_solar_consumption(@daily_solar_generation, @daily_grid_contribution)
 
-	
-	/ canvas id="#{reference}" width="600" height="400"
 
-	/ p 
-	/ 	| Daily Grid Consumption
-	/ 	= @daily_grid_consumption
-	/ p 
-	/ 	| Daily Grid Contribution
-	/ 	= @daily_grid_contribution
-	/ p 
-	/ 	| Total Solar Generation
-	/ 	= @daily_solar_generation
-	/ p
-	/ 	| Daily Solar Consumption 
-	/ 	= @daily_solar_consumption
+table
+	tr
+		td Date
+		td Total power usage (grid+solar)
+		td Solar component (% and KwH)
+		td Solar feed-in (% solar generated and KwH)
 
-	/ javascript:
-	/ 	var data = [
-	/ 		{
-	/ 			value: #{@daily_grid_consumption},
-	/ 			color:"#F7464A",
-	/ 			highlight: "#F42F39",
-	/ 			label: "Daily Grid Consumption"
-	/ 		},
-	/ 		{
-	/ 			value: #{@daily_solar_consumption},
-	/ 			color: "#3FB34F",
-	/ 			highlight: "#18B226",
-	/ 			label: "Daily Solar Consumption"
-	/ 		},
-	/ 		{
-	/ 			value: #{@daily_grid_contribution},
-	/ 			color: "#F7EA48",
-	/ 			highlight: "#F7E714",
-	/ 			label: "Daily Solar Contribution"
-	/ 		}
-	/ 	];
-	/ 	var options = {
-	/ 		segmentShowStroke : false,
-	/ 		animateScale : true,
-	/ 		animateRotate: false, 
-	/ 		animation: false
-	/ 	}
+	- (startDate..finishDate).each do |t|
 
-	/ 	var ctx = document.getElementById(#{reference}).getContext('2d');
-
-	/ 	new Chart(ctx).Doughnut(data,options);
+		tr
+			td =@period_date_values[t]
+			td =@period_grid_consumption_values[t].to_i+@period_solar_consumption_values[t].to_i
+			td =@period_solar_consumption_values[t]
+			td =@period_grid_contribution_values[t]
 
 
-canvas id="lineChart" width="1490" height="800"
-
-p
-	= @period_date_values
-p 
-	= @period_grid_contribution_values
-p
-	= @period_grid_consumption_values
-p
-	= @period_solar_generation_values
-p
-	= @period_solar_consumption_values
+/ p
+/ 	= @period_date_values
+/ p 
+/ 	= @period_grid_contribution_values
+/ p
+/ 	= @period_grid_consumption_values
+/ p
+/ 	= @period_solar_generation_values
+/ p
+/ 	= @period_solar_consumption_values
 
 
 
@@ -98,12 +96,12 @@ javascript:
 							text: 'Total fruit consumption'
 					},
 					stackLabels: {
-		                enabled: true,
-		                style: {
-		                    fontWeight: 'bold',
-		                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-		                }
-		            },
+						enabled: false,
+						style: {
+							fontWeight: 'bold',
+							color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+						}
+					},
 			},
 			legend: {
 					reversed: true
@@ -126,6 +124,50 @@ javascript:
 		});
 	});
 
+	$(function () {
+		$('#line').highcharts({
+			chart: {
+					type: 'bar'
+			},
+			title: {
+					text: 'Total generation and use'
+			},
+			xAxis: {
+					categories: #{{@period_date_values}}
+			},
+			yAxis: {
+					min: 0,
+					title: {
+							text: 'Total fruit consumption'
+					},
+					stackLabels: {
+						enabled: false,
+						style: {
+							fontWeight: 'bold',
+							color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+						}
+					},
+			},
+			legend: {
+					reversed: true
+			},
+			plotOptions: {
+					series: {
+							stacking: 'normal'
+					}
+			},
+			series: [{
+					name: 'Grid Consumption',
+					data: #{{@period_grid_consumption_values}}
+			}, {
+					name: 'Solar Consumption',
+					data: #{{@period_solar_consumption_values}}
+			}, {
+					name: 'Grid Contribution',
+					data: #{{@period_grid_contribution_values}}
+			}]
+		});
+	});
 
 / javascript:
 / 	var data = {
@@ -183,3 +225,52 @@ javascript:
 / 	var ctx = document.getElementById("lineChart").getContext('2d');
 / 	var myLineChart = new Chart(ctx).Line(data, options);
 
+
+
+
+	/ canvas id="#{reference}" width="600" height="400"
+
+	/ p 
+	/ 	| Daily Grid Consumption
+	/ 	= @daily_grid_consumption
+	/ p 
+	/ 	| Daily Grid Contribution
+	/ 	= @daily_grid_contribution
+	/ p 
+	/ 	| Total Solar Generation
+	/ 	= @daily_solar_generation
+	/ p
+	/ 	| Daily Solar Consumption 
+	/ 	= @daily_solar_consumption
+
+	/ javascript:
+	/ 	var data = [
+	/ 		{
+	/ 			value: #{@daily_grid_consumption},
+	/ 			color:"#F7464A",
+	/ 			highlight: "#F42F39",
+	/ 			label: "Daily Grid Consumption"
+	/ 		},
+	/ 		{
+	/ 			value: #{@daily_solar_consumption},
+	/ 			color: "#3FB34F",
+	/ 			highlight: "#18B226",
+	/ 			label: "Daily Solar Consumption"
+	/ 		},
+	/ 		{
+	/ 			value: #{@daily_grid_contribution},
+	/ 			color: "#F7EA48",
+	/ 			highlight: "#F7E714",
+	/ 			label: "Daily Solar Contribution"
+	/ 		}
+	/ 	];
+	/ 	var options = {
+	/ 		segmentShowStroke : false,
+	/ 		animateScale : true,
+	/ 		animateRotate: false, 
+	/ 		animation: false
+	/ 	}
+
+	/ 	var ctx = document.getElementById(#{reference}).getContext('2d');
+
+	/ 	new Chart(ctx).Doughnut(data,options);
