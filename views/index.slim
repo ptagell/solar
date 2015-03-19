@@ -1,9 +1,9 @@
 h1 Ze Power
 
-<div id="container" style="min-width: 310px; max-width: 800px; height: 400px; margin: 0 auto"></div>
+<div id="container" style="min-width: 310px; max-width: 1400px; height: 500px; margin: 0 auto"></div>
 
 
-- (4..25).each do |n|
+- (3..125).each do |n|
 	- date = Date.today-n
 	/ = date
 
@@ -77,59 +77,102 @@ p
 	= @period_solar_consumption_values
 
 
+
+
 javascript:
-	var data = {
-		labels: #{{@period_date_values.reverse}},
-		datasets: [
 
-			{
-				label: "Grid Consumption",
-				fillColor: "rgba(151,187,205,0.2)",
-				strokeColor: "rgba(151,187,205,1)",
-				pointColor: "rgba(151,187,205,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(151,187,205,1)",
-				data: #{{@period_grid_consumption_values.reverse}}
-			},			{
-				label: "Grid Contribution",
-				fillColor: "rgba(220,220,220,0.2)",
-				strokeColor: "rgba(220,220,220,1)",
-				pointColor: "rgba(220,220,220,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(220,220,220,1)",
-				data: #{{@period_grid_contribution_values.reverse}}
+	$(function () {
+		$('#container').highcharts({
+			chart: {
+					type: 'area'
 			},
-
-			{
-				label: "Solar Generation",
-				fillColor: "rgba(151,187,205,0.4)",
-				strokeColor: "rgba(151,187,205,0.4)",
-				pointColor: "rgba(151,187,205,0/4)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(151,187,205,0.4)",
-				data: #{{@period_solar_generation_values.reverse}}
+			title: {
+					text: 'Total generation and use'
 			},
-			{
-				label: "Solar Consumption",
-				fillColor: "rgba(151,187,205,0.2)",
-				strokeColor: "rgba(151,187,205,1)",
-				pointColor: "rgba(151,187,205,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(151,187,205,1)",
-				data: #{{@period_solar_consumption_values.reverse}}
-			}
-		]
-	};
+			xAxis: {
+					categories: #{{@period_date_values}}
+			},
+			yAxis: {
+					min: 0,
+					title: {
+							text: 'Total fruit consumption'
+					}
+			},
+			legend: {
+					reversed: true
+			},
+			plotOptions: {
+					series: {
+							stacking: 'normal'
+					}
+			},
+			series: [{
+					name: 'Grid Consumption',
+					data: #{{@period_grid_consumption_values}}
+			}, {
+					name: 'Solar Consumption',
+					data: #{{@period_solar_consumption_values}}
+			}, {
+					name: 'Grid Contribution',
+					data: #{{@period_grid_contribution_values}}
+			}]
+		});
+	});
 
-	var options = {
-		animateScale : true,
-		animateRotate: false 
-	}
 
-	var ctx = document.getElementById("lineChart").getContext('2d');
-	var myLineChart = new Chart(ctx).Line(data, options);
+/ javascript:
+/ 	var data = {
+/ 		labels: #{{@period_date_values.reverse}},
+/ 		datasets: [
+
+/ 			{
+/ 				label: "Grid Consumption",
+/ 				fillColor: "rgba(151,187,205,0.2)",
+/ 				strokeColor: "rgba(151,187,205,1)",
+/ 				pointColor: "rgba(151,187,205,1)",
+/ 				pointStrokeColor: "#fff",
+/ 				pointHighlightFill: "#fff",
+/ 				pointHighlightStroke: "rgba(151,187,205,1)",
+/ 				data: #{{@period_grid_consumption_values.reverse}}
+/ 			},			{
+/ 				label: "Grid Contribution",
+/ 				fillColor: "rgba(220,220,220,0.2)",
+/ 				strokeColor: "rgba(220,220,220,1)",
+/ 				pointColor: "rgba(220,220,220,1)",
+/ 				pointStrokeColor: "#fff",
+/ 				pointHighlightFill: "#fff",
+/ 				pointHighlightStroke: "rgba(220,220,220,1)",
+/ 				data: #{{@period_grid_contribution_values.reverse}}
+/ 			},
+
+/ 			{
+/ 				label: "Solar Generation",
+/ 				fillColor: "rgba(151,187,205,0.4)",
+/ 				strokeColor: "rgba(151,187,205,0.4)",
+/ 				pointColor: "rgba(151,187,205,0/4)",
+/ 				pointStrokeColor: "#fff",
+/ 				pointHighlightFill: "#fff",
+/ 				pointHighlightStroke: "rgba(151,187,205,0.4)",
+/ 				data: #{{@period_solar_generation_values.reverse}}
+/ 			},
+/ 			{
+/ 				label: "Solar Consumption",
+/ 				fillColor: "rgba(151,187,205,0.2)",
+/ 				strokeColor: "rgba(151,187,205,1)",
+/ 				pointColor: "rgba(151,187,205,1)",
+/ 				pointStrokeColor: "#fff",
+/ 				pointHighlightFill: "#fff",
+/ 				pointHighlightStroke: "rgba(151,187,205,1)",
+/ 				data: #{{@period_solar_consumption_values.reverse}}
+/ 			}
+/ 		]
+/ 	};
+
+/ 	var options = {
+/ 		animateScale : true,
+/ 		animateRotate: false 
+/ 	}
+
+/ 	var ctx = document.getElementById("lineChart").getContext('2d');
+/ 	var myLineChart = new Chart(ctx).Line(data, options);
 

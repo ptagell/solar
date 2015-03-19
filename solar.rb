@@ -45,7 +45,7 @@ get '/' do
 			end
 		end
 		@daily_grid_consumption = daily_consumption_values.inject(0, :+).round(2).to_s
-		@period_grid_consumption_values.push(@daily_grid_consumption)
+		@period_grid_consumption_values.push(@daily_grid_consumption.to_i)
 	end
 
 
@@ -61,7 +61,7 @@ get '/' do
 			end
 		end
 		@daily_grid_contribution = daily_contribution_values.inject(0, :+).round(2).to_s
-		@period_grid_contribution_values.push(@daily_grid_contribution)
+		@period_grid_contribution_values.push(@daily_grid_contribution.to_i)
 	end
 
 
@@ -69,7 +69,7 @@ get '/' do
 		@solar_days.each do |row|
 			if row[0] == d.strftime('%Y-%m-%d')
 				@daily_solar_generation = row[1]
-				@period_solar_generation_values.push(@daily_solar_generation)
+				@period_solar_generation_values.push(@daily_solar_generation.to_i)
 			end
 		end
 	end
@@ -77,7 +77,7 @@ get '/' do
 	def daily_solar_consumption(a, b)
 
 		@daily_solar_consumption = (a.to_f - b.to_f).round(2).to_s
-		@period_solar_consumption_values.push(@daily_solar_consumption)
+		@period_solar_consumption_values.push(@daily_solar_consumption.to_i)
 	end
 
 # @period_grid_contribution_values
