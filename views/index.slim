@@ -96,7 +96,14 @@ javascript:
 					min: 0,
 					title: {
 							text: 'Total fruit consumption'
-					}
+					},
+					stackLabels: {
+		                enabled: true,
+		                style: {
+		                    fontWeight: 'bold',
+		                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+		                }
+		            },
 			},
 			legend: {
 					reversed: true
